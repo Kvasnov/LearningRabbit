@@ -1,8 +1,7 @@
 {
   "profiles": {
     "RabbitSend": {
-      "commandName": "Project",
-      "commandLineArgs": "template.awe.ibb temp message"
+      "commandName": "Project"
     }
   }
 }

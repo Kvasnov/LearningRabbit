@@ -1,8 +1,7 @@
 {
   "profiles": {
     "RabbitReceive": {
-      "commandName": "Project",
-      "commandLineArgs": "template.# om.#"
+      "commandName": "Project"
     }
   }
 }
