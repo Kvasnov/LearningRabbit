@@ -2,7 +2,7 @@
   "profiles": {
     "RabbitSend": {
       "commandName": "Project",
-      "commandLineArgs": "error test param"
+      "commandLineArgs": "template.awe.ibb temp message"
     }
   }
 }

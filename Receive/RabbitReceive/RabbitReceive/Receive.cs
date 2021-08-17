@@ -15,12 +15,12 @@ namespace RabbitReceive
             {
                 using (var channel = connection.CreateModel())
                 {
-                    channel.ExchangeDeclare("direct_logs", ExchangeType.Direct);
+                    channel.ExchangeDeclare("topic_logs", ExchangeType.Topic);
                     var queueName = channel.QueueDeclare().QueueName;
 
                     if (args.Length < 1)
                     {
-                        Console.Error.WriteLine("Usage: {0} [info] [warning] [error]", Environment.GetCommandLineArgs()[ 0 ]);
+                        Console.Error.WriteLine("Usage: {0} [binding_key...]", Environment.GetCommandLineArgs()[ 0 ]);
                         Console.WriteLine(" Press [enter] to exit.");
                         Console.ReadLine();
                         Environment.ExitCode = 1;
@@ -29,7 +29,7 @@ namespace RabbitReceive
                     }
 
                     foreach (var severity in args)
-                        channel.QueueBind(queueName, "direct_logs", severity);
+                        channel.QueueBind(queueName, "topic_logs", severity);
 
                     Console.WriteLine(" [x] Waiting for messages.");
                     var consumer = new EventingBasicConsumer(channel);

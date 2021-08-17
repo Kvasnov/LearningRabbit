@@ -15,11 +15,11 @@ namespace RabbitSend
             {
                 using (var channel = connection.CreateModel())
                 {
-                    channel.ExchangeDeclare("direct_logs", ExchangeType.Direct);
+                    channel.ExchangeDeclare("topic_logs", ExchangeType.Topic);
                     var message = GetMessage(args);
-                    var severity = args.Length > 0 ? args[ 0 ] : "info";
+                    var severity = args.Length > 0 ? args[ 0 ] : "anonymous.info";
                     var body = Encoding.UTF8.GetBytes(message);
-                    channel.BasicPublish("direct_logs", severity, null, body);
+                    channel.BasicPublish("topic_logs", severity, null, body);
                     Console.WriteLine(" [x] Sent '{0}': '{1}'", message, severity);
                 }
             }
