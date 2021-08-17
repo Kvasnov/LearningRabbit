@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RabbitReceive": {
+      "commandName": "Project",
+      "commandLineArgs": "error info test param"
+    }
+  }
+}

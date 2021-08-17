@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RabbitSend": {
+      "commandName": "Project",
+      "commandLineArgs": "error test param"
+    }
+  }
+}

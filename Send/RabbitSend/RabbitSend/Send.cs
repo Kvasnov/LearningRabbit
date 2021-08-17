@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using RabbitMQ.Client;
 
@@ -14,11 +15,12 @@ namespace RabbitSend
             {
                 using (var channel = connection.CreateModel())
                 {
-                    channel.ExchangeDeclare("logs", ExchangeType.Fanout);
+                    channel.ExchangeDeclare("direct_logs", ExchangeType.Direct);
                     var message = GetMessage(args);
+                    var severity = args.Length > 0 ? args[ 0 ] : "info";
                     var body = Encoding.UTF8.GetBytes(message);
-                    channel.BasicPublish("logs", "", null, body);
-                    Console.WriteLine(" [x] Sent {0}", message);
+                    channel.BasicPublish("direct_logs", severity, null, body);
+                    Console.WriteLine(" [x] Sent '{0}': '{1}'", message, severity);
                 }
             }
 
@@ -28,7 +30,7 @@ namespace RabbitSend
 
         private static string GetMessage(string[] args)
         {
-            return args.Length > 0 ? string.Join(" ", args) : "Hello world";
+            return args.Length > 1 ? string.Join(" ", args.Skip(1).ToArray()) : "Hello World!";
         }
     }
 }

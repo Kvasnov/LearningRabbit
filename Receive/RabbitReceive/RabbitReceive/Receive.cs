@@ -7,7 +7,7 @@ namespace RabbitReceive
 {
     public class Receive
     {
-        public static void ReceiveMessage()
+        public static void ReceiveMessage(string[] args)
         {
             var factory = new ConnectionFactory {HostName = "localhost"};
 
@@ -15,16 +15,30 @@ namespace RabbitReceive
             {
                 using (var channel = connection.CreateModel())
                 {
-                    channel.ExchangeDeclare("logs", ExchangeType.Fanout);
+                    channel.ExchangeDeclare("direct_logs", ExchangeType.Direct);
                     var queueName = channel.QueueDeclare().QueueName;
-                    channel.QueueBind(queueName, "logs", "");
+
+                    if (args.Length < 1)
+                    {
+                        Console.Error.WriteLine("Usage: {0} [info] [warning] [error]", Environment.GetCommandLineArgs()[ 0 ]);
+                        Console.WriteLine(" Press [enter] to exit.");
+                        Console.ReadLine();
+                        Environment.ExitCode = 1;
+
+                        return;
+                    }
+
+                    foreach (var severity in args)
+                        channel.QueueBind(queueName, "direct_logs", severity);
+
                     Console.WriteLine(" [x] Waiting for messages.");
                     var consumer = new EventingBasicConsumer(channel);
                     consumer.Received += (model, ea) =>
                                          {
                                              var body = ea.Body.ToArray();
                                              var message = Encoding.UTF8.GetString(body);
-                                             Console.WriteLine(" [x] Receive {0}", message);
+                                             var routingKey = ea.RoutingKey;
+                                             Console.WriteLine(" [x] Receive '{0}':'{1}'", routingKey, message);
                                          };
 
                     channel.BasicConsume(queueName, true, consumer);
