@@ -4,7 +4,7 @@
     {
         private static void Main(string[] args)
         {
-            Send.SendMessage();
+            Send.SendMessage(args);
         }
     }
 }
